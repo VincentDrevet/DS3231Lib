@@ -1,8 +1,10 @@
 # DS3231Lib
-Another Arduino DS3231 library for DS3231 RTC Clock
+Another Arduino DS3231 library for DS3231 RTC Clock.
+
+Note : Commentaries in files are in french sorry for that but it should be easy to understand with example and with traduction tools and appologize for grammar english mistakes ;)
 
 
-# Requirement
+## Requirement
 
 This library require Wire.h Library.
 You must include Wire Library in your sketch :
@@ -12,7 +14,7 @@ You must include Wire Library in your sketch :
 #include <Wire.h>
 ```
 
-# Structure
+## Structure
 
 DeviceTime : this struct is used for contain return time from DS3231 and for set time.
 
@@ -29,9 +31,11 @@ struct DeviceTime
 };
 ```
 
-# Functions
+## Functions
 
-getTime() : This function return a DeviceTime struct.
+### getTime()
+
+This function return a DeviceTime struct.
 
 An Exemple of how use this function : 
 
@@ -62,3 +66,39 @@ void loop() {
   Serial.println(timefromrtc.Seconde);
 }
 ```
+
+### setTime()
+
+This function set time on the DS3231 device.
+For do that, the function take in parameter a DeviceTime struct and return nothing.
+
+this example of how set time on the device :
+
+```
+#include <DS3231Device.h>
+#include <Wire.h>
+
+// Declare DS3231Device object and DeviceTime struct
+DeviceTime timetortc;
+DS3231Device Device;
+
+void setup() {
+  // Start Serial and I2C Bus
+  Serial.begin(9600);
+  Wire.begin();
+
+  // Format: Second, Minute, Hour
+  // in this example the time on the DS3231 is set to 20:49:00
+  timetortc = {byte(0), byte(49), byte(20)};
+
+  // Setting time
+  Device.setTime(timetortc);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+}
+```
+
