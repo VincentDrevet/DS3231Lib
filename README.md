@@ -72,7 +72,7 @@ void loop() {
 This function set time on the DS3231 device.
 For do that, the function take in parameter a DeviceTime struct and return nothing.
 
-this example of how set time on the device :
+An Exemple of how use this function : 
 
 ```
 #include <DS3231Device.h>
