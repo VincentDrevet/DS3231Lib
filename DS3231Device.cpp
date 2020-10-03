@@ -110,14 +110,15 @@ DeviceTime DS3231Device::getTime() {
   // On place le pointeur sur l'adresse 0
   Wire.write(0x0);
 
-  // On requête l'esclave et on retourne 4 octets (les secondes, minutes et heures, jours)
-  Wire.requestFrom(_addr, 4);
+  // On requête l'esclave et on retourne 5 octets (les secondes, minutes et heures, jour de la semaine, date)
+  Wire.requestFrom(_addr, 5);
 
   // On récupère les données bruts
   byte secondes = Wire.read();
   byte minutes = Wire.read();
   byte heures = Wire.read();
   byte jours = Wire.read();
+  byte date = Wire.read();
 
   // On ferme la transmission
   Wire.endTransmission();
@@ -129,6 +130,7 @@ DeviceTime DS3231Device::getTime() {
   time.Seconde = bcdToDec(secondes);
   time.Minute = bcdToDec(minutes);
   time.Heure = bcdToDec(heures);
+  time.Date = bcdToDec(date);
   
   // On converti le byte recupéré depuis le bus I2C vers un jour de la semaine
   time.JSemaine = byteToJSemaine(jours);
@@ -147,6 +149,7 @@ void DS3231Device::setTime(DeviceTime timetoset) {
   byte secondebcd = decToBcd(timetoset.Seconde);
   byte minutebcd = decToBcd(timetoset.Minute);
   byte heurebcd = decToBcd(timetoset.Heure);
+  byte datebcd = decToBcd(timetoset.Date);
 
   // On démarre la transmission
   Wire.beginTransmission(_addr);
@@ -159,6 +162,7 @@ void DS3231Device::setTime(DeviceTime timetoset) {
   Wire.write(minutebcd);
   Wire.write(heurebcd);
   Wire.write(StringJSemaineTobyte(timetoset.JSemaine));
+  Wire.write(datebcd);
 
   // On termine la transmission
   Wire.endTransmission();

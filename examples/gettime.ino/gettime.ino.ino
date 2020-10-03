@@ -23,6 +23,8 @@ void loop() {
   Serial.print(":");
   Serial.println(timefromrtc.Seconde);
 
-  Serial.print("Day of Week : ");
-  Serial.println(timefromrtc.JSemaine);
+  Serial.print("Date : ");
+  Serial.print(timefromrtc.JSemaine);
+  Serial.print(" ");
+  Serial.println(timefromrtc.Date);
 }

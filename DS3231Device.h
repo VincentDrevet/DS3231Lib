@@ -17,6 +17,7 @@ struct DeviceTime
   byte Minute;
   byte Heure;
   String JSemaine;
+  byte Date;
 };
 
 class DS3231Device {
