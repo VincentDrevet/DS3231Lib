@@ -41,6 +41,65 @@ byte DS3231Device::decToBcd(byte val)
 }
 
 /*
+  Fonction permettant de convertir la valeur jour récupéré en binaire depuis le DS3231 en String
+  La fonction prend en paramètre un byte contenant une valeur entre 1-7 ou 1 est Dimanche et 7 Samedi
+*/
+String DS3231Device::byteToJSemaine(byte bJSemaine) {
+  switch (int(bJSemaine))
+  {
+  case 1:
+    return "Dimanche";
+    break;
+  case 2:
+    return "Lundi";
+    break;
+  case 3:
+    return "Mardi";
+    break;
+  case 4:
+    return "Mercredi";
+    break;
+  case 5:
+    return  "Jeudi";
+    break;
+  case 6:
+    return "Vendredi";
+    break;
+  case 7:
+    return "Samedi";
+    break;
+  }
+}
+
+/*
+  Fonction convertissant un nom de jour dans la semaine (Lundi, Mardi etc...) en byte allant de 1 à 7
+*/
+
+byte DS3231Device::StringJSemaineTobyte(String JSemaine) {
+  if(JSemaine == "Dimanche") {
+    return byte(1);
+  }
+  else if (JSemaine == "Lundi") {
+    return byte(2);
+  }
+  else if (JSemaine == "Mardi") {
+    return byte(3);
+  }
+  else if (JSemaine == "Mercredi") {
+    return byte(4);
+  }
+  else if (JSemaine == "Jeudi") {
+    return byte(5);
+  }
+  else if (JSemaine == "Vendredi") {
+    return byte(6);
+  }
+  else if (JSemaine == "Samedi") {
+    return byte(7);
+  }
+}
+
+/*
   Fonction retournant une structure DeviceTime contenant le temps renvoyé par le module RTC.
   Les valeurs contenu dans la structure sont des bytes au format DEC, il n'est pas nécessaire de les convertir
 */
@@ -51,13 +110,14 @@ DeviceTime DS3231Device::getTime() {
   // On place le pointeur sur l'adresse 0
   Wire.write(0x0);
 
-  // On requête l'esclave et on retourne 3 octets (les secondes, minutes et heures)
-  Wire.requestFrom(_addr, 5);
+  // On requête l'esclave et on retourne 4 octets (les secondes, minutes et heures, jours)
+  Wire.requestFrom(_addr, 4);
 
   // On récupère les données bruts
   byte secondes = Wire.read();
   byte minutes = Wire.read();
   byte heures = Wire.read();
+  byte jours = Wire.read();
 
   // On ferme la transmission
   Wire.endTransmission();
@@ -69,6 +129,9 @@ DeviceTime DS3231Device::getTime() {
   time.Seconde = bcdToDec(secondes);
   time.Minute = bcdToDec(minutes);
   time.Heure = bcdToDec(heures);
+  
+  // On converti le byte recupéré depuis le bus I2C vers un jour de la semaine
+  time.JSemaine = byteToJSemaine(jours);
 
   return time;
   
@@ -95,6 +158,7 @@ void DS3231Device::setTime(DeviceTime timetoset) {
   Wire.write(secondebcd);
   Wire.write(minutebcd);
   Wire.write(heurebcd);
+  Wire.write(StringJSemaineTobyte(timetoset.JSemaine));
 
   // On termine la transmission
   Wire.endTransmission();
