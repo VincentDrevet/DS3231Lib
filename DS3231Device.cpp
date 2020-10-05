@@ -120,6 +120,7 @@ DeviceTime DS3231Device::getTime() {
   byte jours = Wire.read();
   byte date = Wire.read();
   byte mois = Wire.read();
+  byte annee = Wire.read();
 
   // On ferme la transmission
   Wire.endTransmission();
@@ -133,6 +134,7 @@ DeviceTime DS3231Device::getTime() {
   time.Heure = bcdToDec(heures);
   time.Date = bcdToDec(date);
   time.Mois = bcdToDec(mois);
+  time.Annee = bcdToDec(annee);
   
   // On converti le byte recupéré depuis le bus I2C vers un jour de la semaine
   time.JSemaine = byteToJSemaine(jours);
@@ -153,6 +155,7 @@ void DS3231Device::setTime(DeviceTime timetoset) {
   byte heurebcd = decToBcd(timetoset.Heure);
   byte datebcd = decToBcd(timetoset.Date);
   byte moisbcd = decToBcd(timetoset.Mois);
+  byte anneebcd = decToBcd(timetoset.Annee);
 
   // On démarre la transmission
   Wire.beginTransmission(_addr);
@@ -167,6 +170,7 @@ void DS3231Device::setTime(DeviceTime timetoset) {
   Wire.write(StringJSemaineTobyte(timetoset.JSemaine));
   Wire.write(datebcd);
   Wire.write(moisbcd);
+  Wire.write(anneebcd);
 
   // On termine la transmission
   Wire.endTransmission();
