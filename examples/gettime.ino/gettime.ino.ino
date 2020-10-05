@@ -26,5 +26,7 @@ void loop() {
   Serial.print("Date : ");
   Serial.print(timefromrtc.JSemaine);
   Serial.print(" ");
-  Serial.println(timefromrtc.Date);
+  Serial.print(timefromrtc.Date);
+  Serial.print(" ");
+  Serial.println(timefromrtc.Mois);
 }
